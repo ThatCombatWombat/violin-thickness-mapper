@@ -1,0 +1,14 @@
+/home/alden/Documents/violin-thickness-rs/target/debug/deps/uuid-53b7937a18f899f3.d: /home/alden/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.28.0/src/lib.rs /home/alden/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.28.0/src/macros.rs /home/alden/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.28.0/src/builder.rs /home/alden/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.28.0/src/error.rs /home/alden/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.28.0/src/non_nil.rs /home/alden/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.28.0/src/parser.rs /home/alden/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.28.0/src/fmt.rs /home/alden/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.28.0/src/timestamp.rs /home/alden/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.28.0/src/external.rs /home/alden/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.28.0/src/external/serde_support.rs
+
+/home/alden/Documents/violin-thickness-rs/target/debug/deps/libuuid-53b7937a18f899f3.rmeta: /home/alden/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.28.0/src/lib.rs /home/alden/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.28.0/src/macros.rs /home/alden/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.28.0/src/builder.rs /home/alden/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.28.0/src/error.rs /home/alden/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.28.0/src/non_nil.rs /home/alden/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.28.0/src/parser.rs /home/alden/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.28.0/src/fmt.rs /home/alden/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.28.0/src/timestamp.rs /home/alden/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.28.0/src/external.rs /home/alden/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.28.0/src/external/serde_support.rs
+
+/home/alden/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.28.0/src/lib.rs:
+/home/alden/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.28.0/src/macros.rs:
+/home/alden/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.28.0/src/builder.rs:
+/home/alden/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.28.0/src/error.rs:
+/home/alden/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.28.0/src/non_nil.rs:
+/home/alden/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.28.0/src/parser.rs:
+/home/alden/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.28.0/src/fmt.rs:
+/home/alden/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.28.0/src/timestamp.rs:
+/home/alden/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.28.0/src/external.rs:
+/home/alden/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.28.0/src/external/serde_support.rs:
