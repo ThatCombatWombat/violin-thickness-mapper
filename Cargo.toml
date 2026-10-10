@@ -1,0 +1,22 @@
+[package]
+name = "violin-thickness-mapper"
+version = "0.1.0"
+edition = "2021"
+description = "Native desktop app for mapping violin plate thickness measurements"
+license = "MIT"
+
+[dependencies]
+eframe = { version = "0.31", default-features = true }
+egui = "0.31"
+image = { version = "0.25", default-features = false, features = ["jpeg", "png"] }
+rfd = "0.15"
+csv = "1.3"
+nalgebra = "0.33"
+rayon = "1.10"
+anyhow = "1.0"
+
+[profile.release]
+opt-level = 3
+lto = "thin"
+codegen-units = 1
+panic = "abort"

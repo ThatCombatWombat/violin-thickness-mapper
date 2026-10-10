@@ -1,0 +1,137 @@
+name: Cross-platform release
+
+on:
+  push:
+    tags:
+      - "v[0-9]*"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build ${{ matrix.label }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: ubuntu-22.04
+            label: linux-x86_64
+            archive: tar.gz
+          - runner: windows-2022
+            label: windows-x86_64
+            archive: exe
+          - runner: macos-14
+            label: macos-aarch64
+            archive: zip
+          - runner: macos-15-intel
+            label: macos-x86_64
+            archive: zip
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Install Linux build dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes \
+            build-essential pkg-config \
+            libasound2-dev libudev-dev \
+            libgtk-3-dev libglib2.0-dev \
+            libx11-dev libx11-xcb-dev libxcb1-dev libxcb-render0-dev \
+            libxcb-shape0-dev libxcb-xfixes0-dev libxcb-randr0-dev \
+            libxcb-xinerama0-dev libxcb-xinput-dev libxcb-xkb-dev \
+            libxcursor-dev libxrandr-dev libxi-dev libxinerama-dev \
+            libxkbcommon-dev libxkbcommon-x11-dev libwayland-dev \
+            libegl1-mesa-dev libgl1-mesa-dev
+
+      - name: Install stable Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache Rust build artifacts
+        uses: Swatinem/rust-cache@v2
+
+      - name: Statically link the Windows C runtime
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: Add-Content -Path $env:GITHUB_ENV -Value 'RUSTFLAGS=-C target-feature=+crt-static'
+
+      - name: Check
+        run: cargo check --locked
+
+      - name: Build release binary
+        run: cargo build --release --locked
+
+      - name: Package Linux archive
+        if: runner.os == 'Linux'
+        shell: bash
+        run: |
+          set -euo pipefail
+          package="ViolinThicknessMapper-${{ matrix.label }}"
+          mkdir -p "dist/$package"
+          cp target/release/violin-thickness-mapper "dist/$package/"
+          cp violin_back.jpg violin_front.jpg README.md "dist/$package/"
+          cat > "dist/$package/ViolinThicknessMapper" <<'LAUNCHER'
+          #!/bin/sh
+          set -eu
+          cd "$(dirname "$0")"
+          exec ./violin-thickness-mapper "$@"
+          LAUNCHER
+          chmod +x "dist/$package/ViolinThicknessMapper"
+          tar -C dist -czf "dist/$package.tar.gz" "$package"
+
+      - name: Package Windows installer with Inno Setup
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          choco install innosetup --yes --no-progress
+          New-Item -ItemType Directory -Force dist/stage | Out-Null
+          Copy-Item target/release/violin-thickness-mapper.exe, violin_back.jpg, violin_front.jpg, README.md dist/stage/
+          $version = (cargo metadata --no-deps --format-version 1 | ConvertFrom-Json).packages[0].version
+          $compiler = "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe"
+          & $compiler "/DAppVersion=$version" packaging/windows/installer.iss
+          if ($LASTEXITCODE -ne 0) { throw "Inno Setup failed with exit code $LASTEXITCODE" }
+
+      - name: Package macOS application bundle
+        if: runner.os == 'macOS'
+        shell: bash
+        run: |
+          set -euo pipefail
+          app="dist/Violin Thickness Mapper.app"
+          mkdir -p "$app/Contents/MacOS" "$app/Contents/Resources"
+          cp target/release/violin-thickness-mapper "$app/Contents/MacOS/"
+          cp violin_back.jpg violin_front.jpg README.md "$app/Contents/Resources/"
+          version="$(cargo metadata --no-deps --format-version 1 | python3 -c 'import json,sys; print(json.load(sys.stdin)["packages"][0]["version"])')"
+          sed "s/__APP_VERSION__/$version/g" packaging/macos/Info.plist.in > "$app/Contents/Info.plist"
+          ditto -c -k --sequesterRsrc --keepParent "$app" "dist/ViolinThicknessMapper-${{ matrix.label }}.zip"
+
+      - name: Upload platform archive
+        uses: actions/upload-artifact@v4
+        with:
+          name: ViolinThicknessMapper-${{ matrix.label }}
+          path: dist/ViolinThicknessMapper-${{ matrix.label }}.${{ matrix.archive }}
+          if-no-files-found: error
+          retention-days: 7
+
+  publish:
+    name: Publish GitHub Release
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: build
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Download platform archives
+        uses: actions/download-artifact@v4
+        with:
+          path: release-assets
+          pattern: ViolinThicknessMapper-*
+          merge-multiple: true
+
+      - name: Create release and upload archives
+        uses: softprops/action-gh-release@v2
+        with:
+          files: release-assets/*
+          fail_on_unmatched_files: true
+          generate_release_notes: true
