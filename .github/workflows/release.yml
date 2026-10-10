@@ -73,7 +73,7 @@ jobs:
           package="ViolinThicknessMapper-${{ matrix.label }}"
           mkdir -p "dist/$package"
           cp target/release/violin-thickness-mapper "dist/$package/"
-          cp violin_back.jpg violin_front.jpg README.md "dist/$package/"
+          cp README.md "dist/$package/"
           cat > "dist/$package/ViolinThicknessMapper" <<'LAUNCHER'
           #!/bin/sh
           set -eu
@@ -89,7 +89,7 @@ jobs:
         run: |
           choco install innosetup --yes --no-progress
           New-Item -ItemType Directory -Force dist/stage | Out-Null
-          Copy-Item target/release/violin-thickness-mapper.exe, violin_back.jpg, violin_front.jpg, README.md dist/stage/
+          Copy-Item target/release/violin-thickness-mapper.exe, README.md dist/stage/
           $version = (cargo metadata --no-deps --format-version 1 | ConvertFrom-Json).packages[0].version
           $compiler = "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe"
           & $compiler "/DAppVersion=$version" packaging/windows/installer.iss
@@ -103,7 +103,7 @@ jobs:
           app="dist/Violin Thickness Mapper.app"
           mkdir -p "$app/Contents/MacOS" "$app/Contents/Resources"
           cp target/release/violin-thickness-mapper "$app/Contents/MacOS/"
-          cp violin_back.jpg violin_front.jpg README.md "$app/Contents/Resources/"
+          cp README.md "$app/Contents/Resources/"
           version="$(cargo metadata --no-deps --format-version 1 | python3 -c 'import json,sys; print(json.load(sys.stdin)["packages"][0]["version"])')"
           sed "s/__APP_VERSION__/$version/g" packaging/macos/Info.plist.in > "$app/Contents/Info.plist"
           hdiutil create \
